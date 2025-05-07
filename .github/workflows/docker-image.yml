@@ -7,7 +7,6 @@ on:
     branches: [ "main" ]  # Main branch'e yapılacak pull request ile tetiklenir
 
 jobs:
-
   build:
     runs-on: ubuntu-latest  # GitHub Actions için Ubuntu ortamı kullanıyoruz
 
@@ -19,7 +18,7 @@ jobs:
       uses: docker/setup-buildx-action@v2  # Docker Buildx kurulumunu yapıyoruz
 
     - name: Cache Docker layers
-      uses: actions/cache@v2  # Docker katmanlarını önbelleğe almak için
+      uses: actions/cache@v3  # Docker katmanlarını önbelleğe almak için v3 sürümünü kullanıyoruz
       with:
         path: /tmp/.buildx-cache  # Docker'ın cache verilerini saklıyoruz
         key: ${{ runner.os }}-buildx-${{ github.sha }}
@@ -32,4 +31,3 @@ jobs:
     - name: Run the Docker container (optional)
       run: |
         docker run -d -p 8080:80 eric-image:$(date +%s)  # İmajı çalıştırıyoruz, 8080 portunu 80'e yönlendiriyoruz
-
