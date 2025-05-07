@@ -25,9 +25,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag eric-image:$(date +%s)  # Dockerfile ile imaj build ediyoruz
-
-    - name: Run the Docker container (optional)
+    - name: Build the Docker image from Dockerfile
       run: |
-        docker run -d -p 8080:80 eric-image:$(date +%s)  # İmajı çalıştırıyoruz, 8080 portunu 80'e yönlendiriyoruz
+        docker build -f Dockerfile -t elifarslancelik/ERIC:latest .  # Proje adı 'ERIC', doğru şekilde tag'liyoruz
+
+    - name: Run the Docker container
+      run: |
+        docker run -d -p 8080:80 elifarslancelik/ERIC:latest  # Aynı tag'i kullanarak container'ı başlatıyoruz
