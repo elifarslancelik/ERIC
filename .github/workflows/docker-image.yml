@@ -1,0 +1,35 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]  # Ana branch'e yapılan push işlemiyle tetiklenir
+  pull_request:
+    branches: [ "main" ]  # Main branch'e yapılacak pull request ile tetiklenir
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest  # GitHub Actions için Ubuntu ortamı kullanıyoruz
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4  # Reponuzu çekiyoruz
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2  # Docker Buildx kurulumunu yapıyoruz
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2  # Docker katmanlarını önbelleğe almak için
+      with:
+        path: /tmp/.buildx-cache  # Docker'ın cache verilerini saklıyoruz
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag eric-image:$(date +%s)  # Dockerfile ile imaj build ediyoruz
+
+    - name: Run the Docker container (optional)
+      run: |
+        docker run -d -p 8080:80 eric-image:$(date +%s)  # İmajı çalıştırıyoruz, 8080 portunu 80'e yönlendiriyoruz
+
