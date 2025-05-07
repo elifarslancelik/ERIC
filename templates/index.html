@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERIC - AI Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="user-menu">
+            <div class="user-button" onclick="toggleUserMenu()">
+                <img src="/static/user-avatar.png" alt="User" class="user-avatar">
+                <span class="user-name">John Doe</span>
+                <span class="menu-arrow">▼</span>
+            </div>
+            <div class="user-dropdown" id="userDropdown">
+                <div class="dropdown-item" onclick="openSettings()">
+                    <i class="icon">⚙️</i> Settings
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="logout()">
+                    <i class="icon">🚪</i> Logout
+                </div>
+            </div>
+        </div>
+
+        <header class="header">
+            <div class="logo-container">
+                <img src="/static/eric.logo.png" alt="ERIC Logo" class="logo">
+            </div>
+            <div class="header-content">
+                <h1 class="brand">ERIC</h1>
+                <p class="slogan">
+                    A good prompt follows a simple framework:<br>
+                    <span class="highlight">E</span>valuate,
+                    <span class="highlight">R</span>eferences,
+                    <span class="highlight">I</span>terate,
+                    <span class="highlight">C</span>ontext
+                </p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="input-area">
+                <textarea 
+                    id="input_text" 
+                    placeholder="Type your message here..." 
+                    maxlength="25000"
+                ></textarea>
+                <div class="character-count">
+                    <span id="currentCount">0</span>
+                    <span>/</span>
+                    <span>25000</span>
+                </div>
+            </div>
+
+            <div class="tags-section">
+                <span class="tags-label">Select Persona <span class="tags-toggle">▼</span></span>
+                
+                <div class="tabs-container">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" data-tab="art">Art</button>
+                        <button class="tab-button" data-tab="tech">Technology</button>
+                        <button class="tab-button" data-tab="science">Science</button>
+                        <button class="tab-button" data-tab="social">Social</button>
+                        <button class="tab-button" data-tab="business">Business</button>
+                        <button class="tab-button" data-tab="health">Health</button>
+                        <button class="tab-button" data-tab="design">Design</button>
+                    </div>
+
+                    <div class="tab-content active" data-tab="art">
+                        <div class="tag-container">
+                            <div class="tag" data-tag="poet">🎭 Poet</div>
+                            <div class="tag" data-tag="writer">✍️ Writer</div>
+                            <div class="tag" data-tag="art_curator">🎨 Art Curator</div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" data-tab="tech">
+                        <div class="tag-container">
+                            <div class="tag" data-tag="tech">💻 Tech Expert</div>
+                            <div class="tag" data-tag="prompt_engineer">🤖 Prompt Engineer</div>
+                            <div class="tag" data-tag="futurist">🔮 Futurist</div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" data-tab="science">
+                        <div class="tag-container">
+                            <div class="tag" data-tag="scientist">🔬 Scientist</div>
+                            <div class="tag" data-tag="historian">📚 Historian</div>
+                            <div class="tag" data-tag="environmentalist">🌱 Environmentalist</div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" data-tab="social">
+                        <div class="tag-container">
+                            <div class="tag" data-tag="philosopher">🤔 Philosopher</div>
+                            <div class="tag" data-tag="psychologist">🧠 Psychologist</div>
+                            <div class="tag" data-tag="sociologist">👥 Sociologist</div>
+                            <div class="tag" data-tag="educator">📝 Educator</div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" data-tab="business">
+                        <div class="tag-container">
+                            <div class="tag" data-tag="finance">💰 Finance Expert</div>
+                            <div class="tag" data-tag="entrepreneur">💡 Entrepreneur</div>
+                            <div class="tag" data-tag="project_manager">📊 Project Manager</div>
+                            <div class="tag" data-tag="journalist">📰 Journalist</div>
+                            <div class="tag" data-tag="lawyer">⚖️ Lawyer</div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" data-tab="health">
+                        <div class="tag-container">
+                            <div class="tag" data-tag="life_coach">🎯 Life Coach</div>
+                            <div class="tag" data-tag="nutritionist">🥗 Nutritionist</div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" data-tab="design">
+                        <div class="tag-container">
+                            <div class="tag" data-tag="fashion_stylist">👗 Fashion Stylist</div>
+                            <div class="tag" data-tag="architect">🏗️ Architect</div>
+                            <div class="tag" data-tag="chef">👨‍🍳 Chef</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="sendButton" class="button" onclick="generateResponse()">Send</button>
+                <span id="loading" class="loading" style="display: none;">Processing...</span>
+            </div>
+
+            <div id="error" class="error"></div>
+            <div id="success" class="success"></div>
+
+            <div class="response-container">
+                <div id="response"></div>
+                <button onclick="exportConversation()" id="exportButton" class="button export-button">Save Conversation</button>
+            </div>
+
+            <div class="decoder-container">
+                <div class="decoder-header">
+                    <h2>Response History</h2>
+                    <div class="decoder-input">
+                        <input type="text" id="responseId" placeholder="Enter Response ID">
+                        <button onclick="decodeResponse()" class="button">Get Response</button>
+                    </div>
+                </div>
+                <div id="decodedResponse" class="decoded-response"></div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/static/script.js"></script>
+</body>
+</html> 
