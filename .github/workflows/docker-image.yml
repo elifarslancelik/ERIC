@@ -27,8 +27,8 @@ jobs:
 
     - name: Build the Docker image from Dockerfile
       run: |
-        docker build -f Dockerfile -t elifarslancelik/eric:latest .  # Tag'i küçük harflerle belirliyoruz
+        docker build -f Dockerfile -t elifarslancelik/eric:latest .  # Dockerfile ile imaj build ediyoruz
 
     - name: Run the Docker container
       run: |
-        docker run -d -p 8080:80 elifarslancelik/eric:latest  # Aynı tag'i kullanarak container'ı başlatıyoruz
+        docker run -d -p 8080:7860 elifarslancelik/eric:latest  # Flask uygulamasını 7860 portunda çalıştırıyoruz
